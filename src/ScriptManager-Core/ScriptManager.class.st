@@ -288,7 +288,7 @@ ScriptManager >> exportScripts [
 	exportFileName := FillInTheBlank 
 		request: 'File name? (".obj" will be added to end)' 
 		initialAnswer: self storageFileName.
-	exportFileName size == 0 ifTrue: [^ self beep].
+	exportFileName size == 0 ifTrue: [^ Beeper beep].
 	(exportFileName asLowercase endsWith: '.obj') ifFalse: [
 		exportFileName := exportFileName,'.obj'].
 	Cursor wait showWhile: [
