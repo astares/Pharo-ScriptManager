@@ -479,7 +479,7 @@ ScriptManager >> moveScriptNamed: scriptName from: oldFolder to:  newFolder [
 { #category : #callbacks }
 ScriptManager >> newFolder [
 	| newFolderName |
-	(newFolderName := self promptForNewName) isNil ifTrue: [^nil].
+	(newFolderName := self promptForNewName) isEmptyOrNil ifTrue: [^nil].
 	(self folderList includes: newFolderName) ifTrue: [
 		^PopUpMenu notify: 'a script named ' , newFolderName , ' already exists'].
 	self createFolderNamed: newFolderName
@@ -489,7 +489,7 @@ ScriptManager >> newFolder [
 ScriptManager >> newScript [
 	| scriptName index |
 	self isFolderSelected ifFalse: [^nil].
-	(scriptName := self promptForNewName) isEmpty ifTrue: [^nil].
+	(scriptName := self promptForNewName) isEmptyOrNil ifTrue: [^nil].
 	(self scriptList includes: scriptName) ifTrue: [
 		^PopUpMenu notify: 'a script named ', scriptName, ' already exists'].
 	self selectedFolder at: scriptName put: ''.
@@ -541,7 +541,7 @@ ScriptManager >> renameFolder [
 	self isFolderSelected
 		ifFalse: [^ nil].
 	oldName := self selectedFolderName.
-	((newName := self promptForNewName: oldName) isEmpty
+	((newName := self promptForNewName: oldName) isEmptyOrNil
 			or: [oldName = newName])
 		ifTrue: [^ nil].
 	(self folderList includes: newName)
