@@ -526,13 +526,15 @@ editPane from which the menu was invoked."
 
 { #category : #callbacks }
 ScriptManager >> promptForNewName [
-	^FillInTheBlank request: 'New name?'
+	^UIManager default request: 'New name?'
 
 ]
 
 { #category : #callbacks }
 ScriptManager >> promptForNewName: aString [
-	^ FillInTheBlank request: 'New name?' initialAnswer: aString.
+	^UIManager default request: 'New name?' initialAnswer: aString.
+	
+ 
 ]
 
 { #category : #callbacks }
@@ -700,8 +702,9 @@ ScriptManager >> storageFileName [
 
 { #category : #callbacks }
 ScriptManager >> tearOffScript [
-	| ws |
-	ws := Workspace new contents: self contents.
+	| wsClass ws |
+	wsClass := (Smalltalk at: #SHWorkspace ifAbsent: [Workspace]).
+	ws := wsClass new contents: self contents.
 	ws openLabel: 'Workspace' 
 ]
 
