@@ -71,7 +71,7 @@ ScriptManager >> acceptDroppingMorph: transferMorph event: evt inMorph: dstListM
 	srcListSel := transferMorph source getListSelector.
 	(dstListSel == #folderList and: [srcListSel == #scriptList]) ifTrue: [
 		| newFolder oldFolder scriptName |
-		newFolder := dstListMorph potentialDropMorph contents.
+		newFolder := dstListMorph potentialDropItem contents.
 		scriptName := transferMorph passenger contents.
 		oldFolder := self selectedFolderName.
 		self 
@@ -83,16 +83,14 @@ ScriptManager >> acceptDroppingMorph: transferMorph event: evt inMorph: dstListM
 { #category : #widgets }
 ScriptManager >> addMorphsTo: aWindow [
 	"Add morphs to <aWindow>."
-	| dragNDropFlag |
-	dragNDropFlag := Preferences browseWithDragNDrop.
-
+	 
 	folderListIndex := 0.
 	scriptListIndex := 0.
 	aWindow
-		addMorph: (self folderListWidget enableDragNDrop: dragNDropFlag)
+		addMorph: (self folderListWidget enableDragNDrop: true)
 		frame: (0@0 extent: 0.4@0.4).
 	aWindow 
-		addMorph: (self scriptListWidget enableDragNDrop: dragNDropFlag)
+		addMorph: (self scriptListWidget enableDragNDrop: true)
 		frame: (0.4 @ 0.0 extent: 0.6 @ 0.4).
 
 	aWindow
@@ -291,6 +289,10 @@ ScriptManager >> exportScripts [
 	exportFileName isEmptyOrNil ifTrue: [^ Beeper beep].
 	(exportFileName asLowercase endsWith: '.obj') ifFalse: [
 		exportFileName := exportFileName,'.obj'].
+	
+	((FileDirectory default fileExists: exportFileName) 
+		and: [(UIManager default confirm: 'Overwrite file ', exportFileName) = false]) ifTrue: [^self].
+				
 	Cursor wait showWhile: [
 		rr := ReferenceStream fileNamed: exportFileName.
 		rr nextPut:  self scripts.
@@ -405,6 +407,10 @@ ScriptManager >> importScripts [
 	importFileName isEmptyOrNil ifTrue: [^ Beeper beep ].
 	(importFileName asLowercase endsWith: '.obj') ifFalse: [
 		importFileName := importFileName,'.obj'].
+	
+	(FileDirectory default fileExists: importFileName) 
+		ifFalse: [^UIManager default inform: 'File ', importFileName, ' does not exist!' ].	
+			
 	Cursor wait showWhile: [
 		rr := ReferenceStream fileNamed: importFileName.
 		importedScripts := rr next.
