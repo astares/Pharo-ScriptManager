@@ -122,7 +122,7 @@ ScriptManager >> bringInScripts [
 	| wsDictionary selected |
 	wsDictionary := self workspaceDictionary.
 	wsDictionary isEmpty
-		ifTrue: [PopUpMenu notify: 'No workspaces currently open.'.
+		ifTrue: [ UIManager default inform: 'No workspaces currently open.'.
 			^ self].
 	(selected := self chooseWorkspace: wsDictionary) isNil
 		ifTrue: [^ self].
@@ -258,8 +258,8 @@ ScriptManager >> dragTransferTypeForMorph: dragSource [
 { #category : #callbacks }
 ScriptManager >> dumpScriptToFile [
 	| aFileName fileStream |
-	aFileName := FillInTheBlank request: 'Name of file to dump script to: '.
-	aFileName size == 0 ifTrue: [^ self].
+	aFileName := UIManager default request: 'Name of file to dump script to: '.
+	aFileName isEmptyOrNil ifTrue: [^ self].
 	fileStream := FileStream fileNamed: aFileName.
 	fileStream nextPutAll: self contents; close
 ]
@@ -285,10 +285,10 @@ ScriptManager >> editorMorph [
 ScriptManager >> exportScripts [
 
 	| rr exportFileName |
-	exportFileName := FillInTheBlank 
+	exportFileName := UIManager default 
 		request: 'File name? (".obj" will be added to end)' 
 		initialAnswer: self storageFileName.
-	exportFileName size == 0 ifTrue: [^ Beeper beep].
+	exportFileName isEmptyOrNil ifTrue: [^ Beeper beep].
 	(exportFileName asLowercase endsWith: '.obj') ifFalse: [
 		exportFileName := exportFileName,'.obj'].
 	Cursor wait showWhile: [
@@ -399,10 +399,10 @@ ScriptManager >> hasBindingThatBeginsWith: aString [
 ScriptManager >> importScripts [
 
 	| rr importFileName importedScripts |
-	importFileName := FillInTheBlank 
+	importFileName := UIManager default 
 		request: 'File name? (".obj" will be added to end)' 
 		initialAnswer: self fileName.
-	importFileName size == 0 ifTrue: [^ Beeper beep ].
+	importFileName isEmptyOrNil ifTrue: [^ Beeper beep ].
 	(importFileName asLowercase endsWith: '.obj') ifFalse: [
 		importFileName := importFileName,'.obj'].
 	Cursor wait showWhile: [
@@ -445,8 +445,8 @@ ScriptManager >> label [
 { #category : #callbacks }
 ScriptManager >> loadScriptFromFile [
 	| aFileName fileStream assoc string |
-	aFileName := FillInTheBlank request: 'Name of file to be loaded: '.
-	aFileName size == 0 ifTrue: [^ self].
+	aFileName := UIManager default request: 'Name of file to be loaded: '.
+	aFileName isEmptyOrNil ifTrue: [^ self].
 	(FileDirectory default fileExists: aFileName) ifFalse:
 		[^ self inform: 'Sorry -- cannot find that file'].
 	fileStream := FileStream readOnlyFileNamed: aFileName.
@@ -481,7 +481,7 @@ ScriptManager >> newFolder [
 	| newFolderName |
 	(newFolderName := self promptForNewName) isEmptyOrNil ifTrue: [^nil].
 	(self folderList includes: newFolderName) ifTrue: [
-		^PopUpMenu notify: 'a script named ' , newFolderName , ' already exists'].
+		^UIManager default inform: 'A folder named ' , newFolderName , ' already exists'].
 	self createFolderNamed: newFolderName
 ]
 
@@ -491,7 +491,7 @@ ScriptManager >> newScript [
 	self isFolderSelected ifFalse: [^nil].
 	(scriptName := self promptForNewName) isEmptyOrNil ifTrue: [^nil].
 	(self scriptList includes: scriptName) ifTrue: [
-		^PopUpMenu notify: 'a script named ', scriptName, ' already exists'].
+		^UIManager default inform: 'A script named ', scriptName, ' already exists'].
 	self selectedFolder at: scriptName put: ''.
 	self changed: #scriptList.
 	index := self scriptList indexOf: scriptName.
@@ -547,7 +547,7 @@ ScriptManager >> renameFolder [
 			or: [oldName = newName])
 		ifTrue: [^ nil].
 	(self folderList includes: newName)
-		ifTrue: [^ PopUpMenu notify: 'a script named ' , newName , ' already exists'].
+		ifTrue: [^ UIManager default inform: 'a folder named ' , newName , ' already exists'].
 	myScripts := self scripts at: oldName.
 	self scripts at: newName put: myScripts;
 		 at: oldName put: nil.
@@ -565,7 +565,7 @@ ScriptManager >> renameScript [
 			or: [oldName = newName])
 		ifTrue: [^ nil].
 	(self scriptList includes: newName)
-		ifTrue: [^ PopUpMenu notify: 'a script named ' , newName , ' already exists'].
+		ifTrue: [^ UIManager default inform: 'a script named ' , newName , ' already exists'].
 	myScript := self selectedFolder at: oldName.
 	self selectedFolder at: newName put: myScript;
 		 at: oldName put: nil.
