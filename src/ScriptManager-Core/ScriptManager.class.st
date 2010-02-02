@@ -74,10 +74,11 @@ ScriptManager >> acceptDroppingMorph: transferMorph event: evt inMorph: dstListM
 		newFolder := dstListMorph potentialDropItem contents.
 		scriptName := transferMorph passenger contents.
 		oldFolder := self selectedFolderName.
-		self 
-			moveScriptNamed: scriptName
-			from: oldFolder
-			to: newFolder]
+		oldFolder = newFolder ifFalse: [
+			self 
+				moveScriptNamed: scriptName
+				from: oldFolder
+				to: newFolder]]
 ]
 
 { #category : #widgets }
@@ -474,7 +475,7 @@ ScriptManager >> localWorkspaces [
 ]
 
 { #category : #callbacks }
-ScriptManager >> moveScriptNamed: scriptName from: oldFolder to:  newFolder [
+ScriptManager >> moveScriptNamed: scriptName from: oldFolder to: newFolder [
 	| myScript |
 	myScript := self selectedFolder at: scriptName.
 	(self scripts at: newFolder) at: scriptName put: myScript.
