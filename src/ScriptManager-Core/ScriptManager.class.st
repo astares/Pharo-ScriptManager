@@ -31,7 +31,15 @@ Class {
 { #category : #'instance creation' }
 ScriptManager class >> initialize [
 	Scripts := Dictionary new.
-	TheWorldMenu registerOpenCommand: {'Script Manager'. {self. #open}}.
+	
+]
+
+{ #category : #'world menu' }
+ScriptManager class >> menuCommandOn: aBuilder [ 
+	<worldMenu> 
+	(aBuilder item: #'Script Manager')
+		parent: #Tools;
+		action:[self open]
 ]
 
 { #category : #'instance creation' }
