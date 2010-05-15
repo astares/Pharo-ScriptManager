@@ -31,7 +31,7 @@ Class {
 { #category : #'instance creation' }
 ScriptManager class >> initialize [
 	Scripts := Dictionary new.
-	
+	self registerInWorldMenu
 ]
 
 { #category : #'world menu' }
@@ -52,6 +52,16 @@ ScriptManager class >> open [
 	^window openInWorld
 ]
 
+{ #category : #'world menu' }
+ScriptManager class >> registerInWorldMenu [
+	"This only applies to old Pharo 1.0 and Squeak"
+	
+	Smalltalk at: #TheWorldMenu ifPresent: [ :class |
+		class class methodDict at: #registerOpenCommand: ifPresent: [ :method |
+			(method sendsSelector: #deprecated:) 
+				ifFalse: [ class registerOpenCommand: (Array with: self title with: (Array with: self with: #open)) ] ] ]
+]
+
 { #category : #'instance creation' }
 ScriptManager class >> scripts [
 	^Scripts
@@ -62,11 +72,26 @@ ScriptManager class >> scripts: aDictionary [
 	Scripts := aDictionary
 ]
 
+{ #category : #accessing }
+ScriptManager class >> title [
+	^'Script Manager'
+]
+
 { #category : #'clean up' }
 ScriptManager class >> unload [
 	"Called when the class is being removed"
 
-	TheWorldMenu unregisterOpenCommandWithReceiver: self.
+	self unregisterInWorldMenu
+]
+
+{ #category : #'world menu' }
+ScriptManager class >> unregisterInWorldMenu [
+	"This only applies to old Pharo 1.0 and Squeak"
+	
+	Smalltalk at: #TheWorldMenu ifPresent: [ :class |
+		class class methodDict at: #unregisterOpenCommandWithReceiver: ifPresent: [ :method |
+			(method sendsSelector: #deprecated:) 
+				ifFalse: [ class unregisterOpenCommandWithReceiver: self ] ] ]
 ]
 
 { #category : #'drag&drop' }
