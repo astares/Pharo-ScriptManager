@@ -39,6 +39,7 @@ ScriptManager class >> menuCommandOn: aBuilder [
 	<worldMenu> 
 	(aBuilder item: #'Script Manager')
 		parent: #Tools;
+		icon: UITheme current smallLeftFlushIcon;
 		action:[self open]
 ]
 
@@ -70,6 +71,13 @@ ScriptManager class >> scripts [
 { #category : #'instance creation' }
 ScriptManager class >> scripts: aDictionary [
 	Scripts := aDictionary
+]
+
+{ #category : #'user-interface' }
+ScriptManager class >> taskbarIcon [
+	"Answer the icon for the receiver in a task bar."
+
+	^UITheme current smallLeftFlushIcon
 ]
 
 { #category : #accessing }
