@@ -136,7 +136,7 @@ ScriptManager >> addMorphsTo: aWindow [
 		frame: (0.4 @ 0.0 extent: 0.6 @ 0.4).
 
 	aWindow
-		addMorph: self editorMorph
+		addMorph: self buildTextMorph
 		frame: ( 0@0.4 extent: 1@0.6)
 ]
 
@@ -167,6 +167,20 @@ ScriptManager >> bringInScripts [
 	(selected := self chooseWorkspace: wsDictionary) isNil
 		ifTrue: [^ self].
 	self installWorkspaceScripts: selected
+]
+
+{ #category : #widgets }
+ScriptManager >> buildTextMorph [ 
+
+	^( PluggableTextMorph
+				on: self
+				text: #contents
+				accept: #contents:notifying:
+				readSelection: #contentsSelection
+				menu: #codePaneMenu:shifted:)
+			font: StandardFonts codeFont;
+			beStyled;
+			yourself
 ]
 
 { #category : #callbacks }
@@ -307,18 +321,6 @@ ScriptManager >> dumpScriptToFile [
 { #category : #menus }
 ScriptManager >> dumpToFileString [
 	^'dump to file...'
-]
-
-{ #category : #widgets }
-ScriptManager >> editorMorph [
-
-	^MorphicTextEditor default 
-		on: self 
-		text: #contents 
-		accept: #contents:notifying:
-		readSelection: #contentsSelection 
-		menu: #codePaneMenu:shifted:.
-
 ]
 
 { #category : #callbacks }
