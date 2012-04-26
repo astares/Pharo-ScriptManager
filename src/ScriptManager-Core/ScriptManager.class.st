@@ -366,7 +366,7 @@ ScriptManager >> firstLineFor: aString [
 	lines := OrderedCollection new.
 	stream := aString readStream.
 	[stream atEnd] whileFalse: [
-		lines addLast: stream nextLine withBlanksTrimmed].
+		lines addLast: stream nextLine trimBoth].
 	^lines
 		detect: [ :each | each isEmpty not 
 			and: [((each size = 1) and: [each first = $"]) not]]
@@ -502,7 +502,7 @@ ScriptManager >> loadScriptFromFile [
 	string := fileStream contents.
 	fileStream close.
 	assoc := Association key: aFileName value: string.
-	self installWorkspaceScripts: (Array with: assoc)
+	self installWorkspaceScripts: assoc
 ]
 
 { #category : #callbacks }
