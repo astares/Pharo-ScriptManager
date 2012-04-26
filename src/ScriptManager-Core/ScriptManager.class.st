@@ -179,7 +179,6 @@ ScriptManager >> buildTextMorph [
 				readSelection: #contentsSelection
 				menu: #codePaneMenu:shifted:)
 			font: StandardFonts codeFont;
-			beStyled;
 			yourself
 ]
 
@@ -738,9 +737,8 @@ ScriptManager >> shoutAboutToStyle: aPluggableShoutMorphOrView [
 	"set up the compilation class in aPluggableShoutMorphOrView.
 	Answer true if styling should go ahead, false otherwise"
 	
-	aPluggableShoutMorphOrView 
-		classOrMetaClass: nil;
-		workspace: self.
+	aPluggableShoutMorphOrView classOrMetaClass: nil.
+	aPluggableShoutMorphOrView styler workspace: self.
 	^true
 ]
 
