@@ -236,9 +236,9 @@ ScriptManager >> codePaneMenu: aMenu shifted: shifted [
 	| donorMenu |
 	donorMenu := shifted
 		ifTrue:
-			[ParagraphEditor shiftedYellowButtonMenu]
+			[SmalltalkEditor shiftedYellowButtonMenu]
 		ifFalse:
-			[ParagraphEditor yellowButtonMenu].
+			[SmalltalkEditor yellowButtonMenu].
 	^ aMenu addAllFrom: donorMenu
 ]
 
@@ -327,11 +327,11 @@ ScriptManager >> exportScripts [
 
 	| rr exportFileName |
 	exportFileName := UIManager default 
-		request: 'File name? (".obj" will be added to end)' 
+		request: 'File name? (".fuel" will be added to end)' 
 		initialAnswer: self storageFileName.
 	exportFileName isEmptyOrNil ifTrue: [^ Beeper beep].
-	(exportFileName asLowercase endsWith: '.obj') ifFalse: [
-		exportFileName := exportFileName,'.obj'].
+	(exportFileName asLowercase endsWith: '.fuel') ifFalse: [
+		exportFileName := exportFileName,'.fuel'].
 	
 	((FileDirectory default fileExists: exportFileName) 
 		and: [(UIManager default confirm: 'Overwrite file ', exportFileName) = false]) ifTrue: [^self].
@@ -353,8 +353,8 @@ ScriptManager >> fileName [
 { #category : #callbacks }
 ScriptManager >> fileName: aString [
 	fileName  := aString.
-	(fileName asLowercase endsWith: '.obj') ifTrue: [
-		fileName := fileName copyFrom: 1 to: fileName size - 4].
+	(fileName asLowercase endsWith: '.fuel') ifTrue: [
+		fileName := fileName copyFrom: 1 to: fileName size - 5].
 	self topView setLabel: self label, ' - ', self fileName
 ]
 
@@ -443,11 +443,11 @@ ScriptManager >> importScripts [
 
 	| importFileName importedScripts |
 	importFileName := UIManager default 
-		request: 'File name? (".obj" will be added to end)' 
+		request: 'File name? (".fuel" will be added to end)' 
 		initialAnswer: self fileName.
 	importFileName isEmptyOrNil ifTrue: [^ Beeper beep ].
-	(importFileName asLowercase endsWith: '.obj') ifFalse: [
-		importFileName := importFileName,'.obj'].
+	(importFileName asLowercase endsWith: '.fuel') ifFalse: [
+		importFileName := importFileName,'.fuel'].
 	
 	(FileDirectory default fileExists: importFileName) 
 		ifFalse: [^UIManager default inform: 'File ', importFileName, ' does not exist!' ].	
