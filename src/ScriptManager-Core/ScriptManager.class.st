@@ -337,9 +337,7 @@ ScriptManager >> exportScripts [
 		and: [(UIManager default confirm: 'Overwrite file ', exportFileName) = false]) ifTrue: [^self].
 				
 	Cursor wait showWhile: [
-		rr := ReferenceStream fileNamed: exportFileName.
-		rr nextPut:  self scripts.
-		rr close].
+		FLSerializer serialize: self scripts toFileNamed: exportFileName].
 	self fileName: exportFileName
 
 
@@ -443,7 +441,7 @@ ScriptManager >> hasBindingThatBeginsWith: aString [
 { #category : #callbacks }
 ScriptManager >> importScripts [
 
-	| rr importFileName importedScripts |
+	| importFileName importedScripts |
 	importFileName := UIManager default 
 		request: 'File name? (".obj" will be added to end)' 
 		initialAnswer: self fileName.
@@ -454,10 +452,7 @@ ScriptManager >> importScripts [
 	(FileDirectory default fileExists: importFileName) 
 		ifFalse: [^UIManager default inform: 'File ', importFileName, ' does not exist!' ].	
 			
-	Cursor wait showWhile: [
-		rr := ReferenceStream fileNamed: importFileName.
-		importedScripts := rr next.
-		rr close].
+	Cursor wait showWhile: [ importedScripts := FLMaterializer materializeFromFileNamed: importFileName ].
 	importedScripts ~~ nil ifTrue: [self scripts: importedScripts].
 	self
 		changed: #folderList;
