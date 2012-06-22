@@ -610,7 +610,7 @@ ScriptManager >> renameScript [
 	self isScriptSelected
 		ifFalse: [^ nil].
 	oldName := self selectedScriptName.
-	((newName := self promptForNewName: oldName) isEmpty
+	((newName := self promptForNewName: oldName) isNil
 			or: [oldName = newName])
 		ifTrue: [^ nil].
 	(self scriptList includes: newName)
