@@ -471,6 +471,11 @@ ScriptManager >> installWorkspaceScripts: selected [
 
 ]
 
+{ #category : #testing }
+ScriptManager >> isCodeCompletionAllowed [
+	^true
+]
+
 { #category : #'folder list' }
 ScriptManager >> isFolderSelected [
 	^folderListIndex ~= 0
@@ -698,6 +703,12 @@ ScriptManager >> selectFolderNamed: newName [
 	self
 		changed: #folderList;
 		folderListIndex: index
+]
+
+{ #category : #callbacks }
+ScriptManager >> selectedClassOrMetaClass [
+	"required for code completion"
+	^ nil
 ]
 
 { #category : #'folder list' }
