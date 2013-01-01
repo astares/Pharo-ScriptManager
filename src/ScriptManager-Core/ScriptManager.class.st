@@ -333,7 +333,7 @@ ScriptManager >> exportScripts [
 	(exportFileName asLowercase endsWith: '.fuel') ifFalse: [
 		exportFileName := exportFileName,'.fuel'].
 	
-	((FileDirectory default fileExists: exportFileName) 
+	((DiskStore current isFile: exportFileName asPath) 
 		and: [(UIManager default confirm: 'Overwrite file ', exportFileName) = false]) ifTrue: [^self].
 				
 	Cursor wait showWhile: [
@@ -448,8 +448,7 @@ ScriptManager >> importScripts [
 	importFileName isEmptyOrNil ifTrue: [^ Beeper beep ].
 	(importFileName asLowercase endsWith: '.fuel') ifFalse: [
 		importFileName := importFileName,'.fuel'].
-	
-	(FileDirectory default fileExists: importFileName) 
+	(DiskStore current isFile: importFileName asPath) 
 		ifFalse: [^UIManager default inform: 'File ', importFileName, ' does not exist!' ].	
 			
 	Cursor wait showWhile: [ importedScripts := FLMaterializer materializeFromFileNamed: importFileName ].
@@ -496,7 +495,7 @@ ScriptManager >> loadScriptFromFile [
 	| aFileName fileStream assoc string |
 	aFileName := UIManager default request: 'Name of file to be loaded: '.
 	aFileName isEmptyOrNil ifTrue: [^ self].
-	(FileDirectory default fileExists: aFileName) ifFalse:
+	(DiskStore current isFile: aFileName asPath) ifFalse:
 		[^ self inform: 'Sorry -- cannot find that file'].
 	fileStream := FileStream readOnlyFileNamed: aFileName.
 	string := fileStream contents.
@@ -610,7 +609,7 @@ ScriptManager >> renameScript [
 	self isScriptSelected
 		ifFalse: [^ nil].
 	oldName := self selectedScriptName.
-	((newName := self promptForNewName: oldName) isNil
+	((newName := self promptForNewName: oldName) isEmpty
 			or: [oldName = newName])
 		ifTrue: [^ nil].
 	(self scriptList includes: newName)
