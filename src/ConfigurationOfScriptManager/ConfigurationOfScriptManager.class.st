@@ -205,6 +205,6 @@ ConfigurationOfScriptManager >> version16: spec [
 	spec for: #common do: [
 		spec blessing: #release.
 		spec 
-			package: 'ScriptManager-Core' with: 'ScriptManager-Core-tbn.18';
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.19';
 			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
