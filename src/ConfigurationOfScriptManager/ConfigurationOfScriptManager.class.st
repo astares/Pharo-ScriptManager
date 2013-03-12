@@ -86,7 +86,7 @@ ConfigurationOfScriptManager >> baseline10: spec [
 	
 	spec for: #common do: [
 		spec blessing: #baseline.
-		spec repository: 'http://www.squeaksource.com/ScriptManager'.	
+		spec repository: 'http://smalltalkhub.com/mc/TorstenBergmann/ScriptManager/main'.	
 		spec 
 			package: 'ScriptManager-Core'.
 		spec
@@ -100,7 +100,7 @@ ConfigurationOfScriptManager >> baseline11: spec [
 	
 	spec for: #common do: [
 		spec blessing: #baseline.
-		spec repository: 'http://www.squeaksource.com/ScriptManager'.	
+		spec repository: 'http://smalltalkhub.com/mc/TorstenBergmann/ScriptManager/main'.	
 		spec 
 			package: 'ScriptManager-Core';
 			package: 'ScriptManager-Help'.
