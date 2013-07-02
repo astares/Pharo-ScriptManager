@@ -131,6 +131,7 @@ ConfigurationOfScriptManager >> stable: spec [
 	spec for: #'pharo1.3.x' version: '1.3'.
 	spec for: #'pharo1.4.x' version: '1.4'.
 	spec for: #'pharo2.0.x' version: '1.6'.
+	spec for: #'pharo3.0.x' version: '1.6'.
 	
 ]
 
