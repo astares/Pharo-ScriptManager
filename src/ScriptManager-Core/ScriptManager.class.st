@@ -39,7 +39,7 @@ ScriptManager class >> menuCommandOn: aBuilder [
 	<worldMenu> 
 	(aBuilder item: #'Script Manager')
 		parent: #Tools;
-		icon: UITheme current smallLeftFlushIcon;
+		icon: Smalltalk ui icons smallLeftFlushIcon;
 		action:[self open]
 ]
 
