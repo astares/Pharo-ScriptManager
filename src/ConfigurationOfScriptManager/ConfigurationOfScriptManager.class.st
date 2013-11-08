@@ -215,8 +215,8 @@ ConfigurationOfScriptManager >> version17: spec [
 	<version: '1.7' imports: #('1.1-baseline') >
 	
 	spec for: #common do: [
-		spec blessing: #release.
+		spec blessing: #development.
 		spec 
-			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.21';
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.22';
 			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
