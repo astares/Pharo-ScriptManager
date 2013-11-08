@@ -399,8 +399,8 @@ ScriptManager >> folderListIndex: anInteger [
 ScriptManager >> folderListMenu: aMenu [
 	^ aMenu
 		add: 'new folder ...' action: #newFolder;
-		addUpdating: #renameString enablement: #isFolderSelected action: #renameFolder;
-		addUpdating: #deleteString enablement: #isFolderSelected action: #deleteFolder;
+		addToggle: self renameString target: self selector: #renameFolder getStateSelector: nil enablementSelector: #isFolderSelected;
+		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		
 		addLine;
 		add: 'import' action: #importScripts;
 		add: 'export' action: #exportScripts;
@@ -659,15 +659,15 @@ ScriptManager >> scriptListIndex: anInteger [
 { #category : #menus }
 ScriptManager >> scriptListMenu: aMenu [
 	^ aMenu
-		addUpdating: #newScriptString enablement: #isFolderSelected action: #newScript;
-		addUpdating: #renameString enablement: #isScriptSelected action: #renameScript;
-		addUpdating: #deleteString enablement: #isScriptSelected action: #deleteScript;
-		addUpdating: #changeFolderString enablement: #isScriptSelected action: #changeFolder;
+		addToggle: self newScriptString target: self selector: #newScript getStateSelector: nil enablementSelector: #isFolderSelected;
+		addToggle: self renameString target: self selector: #renameScript getStateSelector: nil enablementSelector: #isScriptSelected;
+		addToggle: self deleteString target: self selector: #deleteScript getStateSelector: nil enablementSelector: #isScriptSelected;
+		addToggle: self changeFolderString target: self selector: #changeFolder getStateSelector: nil enablementSelector: #isScriptSelected;
 		addLine;
-		addUpdating: #tearOffString enablement: #isScriptSelected action: #tearOffScript;
+		addToggle: self tearOffString target: self selector: #tearOffScript getStateSelector: nil enablementSelector: #isScriptSelected;
 		add: 'bring in' action: #bringInScripts;
 		addLine;
-		addUpdating: #dumpToFileString enablement: #isScriptSelected action: #dumpScriptToFile;
+		addToggle: self dumpToFileString target: self selector: #dumpScriptToFile getStateSelector: nil enablementSelector: #isScriptSelected;
 		add: 'load from file...' action: #loadScriptFromFile;
 	yourself
 
