@@ -323,25 +323,50 @@ ScriptManager >> dumpToFileString [
 ]
 
 { #category : #callbacks }
-ScriptManager >> exportScripts [
-
-	| rr exportFileName |
-	exportFileName := UIManager default 
-		request: 'File name? (".fuel" will be added to end)' 
+ScriptManager >> exportScriptsUsingFolderHierarchy [
+	| exportFileName |
+	exportFileName := UIManager default
+		request: 'Folder name? (".scipts" will be added to end)'
 		initialAnswer: self storageFileName.
-	exportFileName isEmptyOrNil ifTrue: [^ Beeper beep].
-	(exportFileName asLowercase endsWith: '.fuel') ifFalse: [
-		exportFileName := exportFileName,'.fuel'].
-	
-	((DiskStore current isFile: exportFileName asPath) 
-		and: [(UIManager default confirm: 'Overwrite file ', exportFileName) = false]) ifTrue: [^self].
-				
-	Cursor wait showWhile: [
-		FLSerializer serialize: self scripts toFileNamed: exportFileName].
+	exportFileName isEmptyOrNil
+		ifTrue: [ ^ Beeper beep ].
+	(exportFileName asLowercase endsWith: '.scripts')
+		ifFalse: [ exportFileName := exportFileName , '.scripts' ].
+	((DiskStore current isDirectory: exportFileName asPath)
+		and: [ (UIManager default confirm: 'Overwrite folder ' , exportFileName) not ])
+		ifTrue: [ ^ self ].
+	Cursor wait showWhile: [ self exportScriptsUsingFolderHierarchyTo: exportFileName asFileReference ].
 	self fileName: exportFileName
+]
 
+{ #category : #private }
+ScriptManager >> exportScriptsUsingFolderHierarchyTo: directory [
+	directory ensureDeleteAll.
+	self scripts keysAndValuesDo: [ :folder :scriptsInFolder |
+		scriptsInFolder keysAndValuesDo: [ :name :contents |
+			| scriptFile |
+			scriptFile := (directory / folder) / name.
+			scriptFile parent ensureCreateDirectory.
+			scriptFile writeStreamDo: [ :stream |
+				stream nextPutAll: contents ] ] ]
+	
+]
 
-
+{ #category : #callbacks }
+ScriptManager >> exportScriptsUsingFuel [
+	| exportFileName |
+	exportFileName := UIManager default
+		request: 'File name? (".fuel" will be added to end)'
+		initialAnswer: self storageFileName.
+	exportFileName isEmptyOrNil
+		ifTrue: [ ^ Beeper beep ].
+	(exportFileName asLowercase endsWith: '.fuel')
+		ifFalse: [ exportFileName := exportFileName , '.fuel' ].
+	((DiskStore current isFile: exportFileName asPath)
+		and: [ (UIManager default confirm: 'Overwrite file ' , exportFileName) not ])
+		ifTrue: [ ^ self ].
+	Cursor wait showWhile: [ FLSerializer serialize: self scripts toFileNamed: exportFileName ].
+	self fileName: exportFileName
 ]
 
 { #category : #callbacks }
@@ -400,10 +425,12 @@ ScriptManager >> folderListMenu: aMenu [
 	^ aMenu
 		add: 'new folder ...' action: #newFolder;
 		addToggle: self renameString target: self selector: #renameFolder getStateSelector: nil enablementSelector: #isFolderSelected;
-		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		
+		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		addLine;
+		add: 'import folder hierarchy' action: #importScriptsUsingFolderHierarchy;
+		add: 'export folder hierarchy' action: #exportScriptsUsingFolderHierarchy;		
 		addLine;
-		add: 'import' action: #importScripts;
-		add: 'export' action: #exportScripts;
+		add: 'import using fuel' action: #importScriptsUsingFuel;
+		add: 'export using fuel' action: #exportScriptsUsingFuel;
 	yourself
 
 ]
@@ -439,25 +466,54 @@ ScriptManager >> hasBindingThatBeginsWith: aString [
 ]
 
 { #category : #callbacks }
-ScriptManager >> importScripts [
-
+ScriptManager >> importScriptsUsingFolderHierarchy [
 	| importFileName importedScripts |
-	importFileName := UIManager default 
-		request: 'File name? (".fuel" will be added to end)' 
-		initialAnswer: self fileName.
-	importFileName isEmptyOrNil ifTrue: [^ Beeper beep ].
-	(importFileName asLowercase endsWith: '.fuel') ifFalse: [
-		importFileName := importFileName,'.fuel'].
-	(DiskStore current isFile: importFileName asPath) 
-		ifFalse: [^UIManager default inform: 'File ', importFileName, ' does not exist!' ].	
-			
-	Cursor wait showWhile: [ importedScripts := FLMaterializer materializeFromFileNamed: importFileName ].
-	importedScripts ~~ nil ifTrue: [self scripts: importedScripts].
+	importFileName := UIManager default request: 'Folder name? (".scripts" will be added to end)' initialAnswer: self fileName.
+	importFileName isEmptyOrNil
+		ifTrue: [ ^ Beeper beep ].
+	(importFileName asLowercase endsWith: '.scripts')
+		ifFalse: [ importFileName := importFileName , '.scripts' ].
+	(DiskStore current isDirectory: importFileName asPath)
+		ifFalse: [ ^ UIManager default inform: 'Folder ' , importFileName , ' does not exist!' ].
+	Cursor wait showWhile: [ importedScripts := self importScriptsUsingFolderHierarchyFrom: importFileName asFileReference ].
+	importedScripts ifNotNil: [ self scripts: importedScripts ].
 	self
 		changed: #folderList;
 		folderListIndex: 0;
 		fileName: importFileName
+]
 
+{ #category : #private }
+ScriptManager >> importScriptsUsingFolderHierarchyFrom: directory [
+	| importedScripts |
+	importedScripts := Dictionary new.
+	directory children do: [ :folder |
+		| scriptsInFolder |
+		scriptsInFolder := Dictionary new.
+		importedScripts at: folder basename put: scriptsInFolder.
+		folder children do: [ :scriptFile |
+			| contents |
+			contents := scriptFile contents.
+			scriptsInFolder at: scriptFile basename put: contents ] ].
+	^ importedScripts 
+]
+
+{ #category : #callbacks }
+ScriptManager >> importScriptsUsingFuel [
+	| importFileName importedScripts |
+	importFileName := UIManager default request: 'File name? (".fuel" will be added to end)' initialAnswer: self fileName.
+	importFileName isEmptyOrNil
+		ifTrue: [ ^ Beeper beep ].
+	(importFileName asLowercase endsWith: '.fuel')
+		ifFalse: [ importFileName := importFileName , '.fuel' ].
+	(DiskStore current isFile: importFileName asPath)
+		ifFalse: [ ^ UIManager default inform: 'File ' , importFileName , ' does not exist!' ].
+	Cursor wait showWhile: [ importedScripts := FLMaterializer materializeFromFileNamed: importFileName ].
+	importedScripts ifNotNil: [ self scripts: importedScripts ].
+	self
+		changed: #folderList;
+		folderListIndex: 0;
+		fileName: importFileName
 ]
 
 { #category : #callbacks }
