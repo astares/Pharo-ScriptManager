@@ -196,9 +196,9 @@ ScriptManager >> changeFolder [
 		to: newFolder
 ]
 
-{ #category : #menus }
+{ #category : #'menus - strings' }
 ScriptManager >> changeFolderString [
-	^'change folder'
+	^'Change folder'
 ]
 
 { #category : #callbacks }
@@ -297,29 +297,15 @@ ScriptManager >> deleteScript [
 
 ]
 
-{ #category : #menus }
+{ #category : #'menus - strings' }
 ScriptManager >> deleteString [
-	^'delete'
+	^'Delete'
 ]
 
 { #category : #'drag&drop' }
 ScriptManager >> dragTransferTypeForMorph: dragSource [ 
 	^(dragSource isKindOf: PluggableListMorph)
 		ifTrue: [dragSource getListSelector]
-]
-
-{ #category : #callbacks }
-ScriptManager >> dumpScriptToFile [
-	| aFileName fileStream |
-	aFileName := UIManager default request: 'Name of file to dump script to: '.
-	aFileName isEmptyOrNil ifTrue: [^ self].
-	fileStream := FileStream fileNamed: aFileName.
-	fileStream nextPutAll: self contents; close
-]
-
-{ #category : #menus }
-ScriptManager >> dumpToFileString [
-	^'dump to file...'
 ]
 
 { #category : #callbacks }
@@ -365,6 +351,15 @@ ScriptManager >> exportScriptsUsingFuel [
 		ifTrue: [ ^ self ].
 	Cursor wait showWhile: [ FLSerializer serialize: self scripts toFileNamed: exportFileName ].
 	self fileName: exportFileName
+]
+
+{ #category : #menus }
+ScriptManager >> exportSubMenuIn: aMenu [
+
+	^(UIManager default newMenuIn: aMenu for: self)
+		add: 'Text scripts in folders' action: #exportScriptsUsingFolderHierarchy;				 
+		add: 'Binary fuel file' action: #exportScriptsUsingFuel;
+		yourself
 ]
 
 { #category : #callbacks }
@@ -420,17 +415,14 @@ ScriptManager >> folderListIndex: anInteger [
 
 { #category : #menus }
 ScriptManager >> folderListMenu: aMenu [
-	^ aMenu
-		add: 'new folder ...' action: #newFolder;
+	^aMenu
+		add: 'New folder ...' action: #newFolder;
 		addToggle: self renameString target: self selector: #renameFolder getStateSelector: nil enablementSelector: #isFolderSelected;
-		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		addLine;
-		add: 'import folder hierarchy' action: #importScriptsUsingFolderHierarchy;
-		add: 'export folder hierarchy' action: #exportScriptsUsingFolderHierarchy;		
+		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		
 		addLine;
-		add: 'import using fuel' action: #importScriptsUsingFuel;
-		add: 'export using fuel' action: #exportScriptsUsingFuel;
-	yourself
-
+		add: 'Import' subMenu: (self importSubMenuIn: aMenu);
+		add: 'Export' subMenu: (self exportSubMenuIn: aMenu);
+		yourself
 ]
 
 { #category : #widgets }
@@ -510,6 +502,15 @@ ScriptManager >> importScriptsUsingFuel [
 		changed: #folderList;
 		folderListIndex: 0;
 		fileName: importFileName
+]
+
+{ #category : #menus }
+ScriptManager >> importSubMenuIn: aMenu [
+
+	^(UIManager default newMenuIn: aMenu for: self)
+		add: 'Text scripts in folders' action: #importScriptsUsingFolderHierarchy;
+		add: 'Binary fuel file' action: #importScriptsUsingFuel;
+		yourself
 ]
 
 { #category : #callbacks }
@@ -601,9 +602,9 @@ ScriptManager >> newScript [
 
 ]
 
-{ #category : #menus }
+{ #category : #'menus - strings' }
 ScriptManager >> newScriptString [
-	^'new script ...'
+	^'New script ...'
 ]
 
 { #category : #callbacks }
@@ -675,9 +676,23 @@ ScriptManager >> renameScript [
 		 scriptListIndex: index
 ]
 
-{ #category : #menus }
+{ #category : #'menus - strings' }
 ScriptManager >> renameString [
-	^'rename ...'
+	^'Rename ...'
+]
+
+{ #category : #callbacks }
+ScriptManager >> saveScriptToFile [
+	| aFileName fileStream |
+	aFileName := UIManager default request: 'Name of file to dump script to: '.
+	aFileName isEmptyOrNil ifTrue: [^ self].
+	fileStream := FileStream fileNamed: aFileName.
+	[ fileStream nextPutAll: self contents ] ensure: [fileStream close]
+]
+
+{ #category : #'menus - strings' }
+ScriptManager >> saveScriptToFileString [
+	^'Save in file...'
 ]
 
 { #category : #'script list' }
@@ -712,15 +727,16 @@ ScriptManager >> scriptListIndex: anInteger [
 ScriptManager >> scriptListMenu: aMenu [
 	^ aMenu
 		addToggle: self newScriptString target: self selector: #newScript getStateSelector: nil enablementSelector: #isFolderSelected;
+		addLine;
 		addToggle: self renameString target: self selector: #renameScript getStateSelector: nil enablementSelector: #isScriptSelected;
 		addToggle: self deleteString target: self selector: #deleteScript getStateSelector: nil enablementSelector: #isScriptSelected;
 		addToggle: self changeFolderString target: self selector: #changeFolder getStateSelector: nil enablementSelector: #isScriptSelected;
 		addLine;
 		addToggle: self tearOffString target: self selector: #tearOffScript getStateSelector: nil enablementSelector: #isScriptSelected;
-		add: 'bring in' action: #bringInScripts;
+		add: 'New from Workspace' action: #bringInScripts;
 		addLine;
-		addToggle: self dumpToFileString target: self selector: #dumpScriptToFile getStateSelector: nil enablementSelector: #isScriptSelected;
-		add: 'load from file...' action: #loadScriptFromFile;
+		addToggle: self saveScriptToFileString target: self selector: #saveScriptToFile getStateSelector: nil enablementSelector: #isScriptSelected;
+		add: 'Load from file...' action: #loadScriptFromFile;
 	yourself
 
 ]
@@ -813,9 +829,9 @@ ScriptManager >> tearOffScript [
 	ws openLabel: 'Workspace' 
 ]
 
-{ #category : #menus }
+{ #category : #'menus - strings' }
 ScriptManager >> tearOffString [
-	^'tear off'
+	^'Open as Workspace'
 ]
 
 { #category : #'drag&drop' }
