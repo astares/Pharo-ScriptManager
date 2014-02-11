@@ -326,12 +326,10 @@ ScriptManager >> dumpToFileString [
 ScriptManager >> exportScriptsUsingFolderHierarchy [
 	| exportFileName |
 	exportFileName := UIManager default
-		request: 'Folder name? (".scipts" will be added to end)'
+		request: 'Folder name?'
 		initialAnswer: self storageFileName.
 	exportFileName isEmptyOrNil
 		ifTrue: [ ^ Beeper beep ].
-	(exportFileName asLowercase endsWith: '.scripts')
-		ifFalse: [ exportFileName := exportFileName , '.scripts' ].
 	((DiskStore current isDirectory: exportFileName asPath)
 		and: [ (UIManager default confirm: 'Overwrite folder ' , exportFileName) not ])
 		ifTrue: [ ^ self ].
@@ -468,11 +466,9 @@ ScriptManager >> hasBindingThatBeginsWith: aString [
 { #category : #callbacks }
 ScriptManager >> importScriptsUsingFolderHierarchy [
 	| importFileName importedScripts |
-	importFileName := UIManager default request: 'Folder name? (".scripts" will be added to end)' initialAnswer: self fileName.
+	importFileName := UIManager default request: 'Folder name?' initialAnswer: self fileName.
 	importFileName isEmptyOrNil
 		ifTrue: [ ^ Beeper beep ].
-	(importFileName asLowercase endsWith: '.scripts')
-		ifFalse: [ importFileName := importFileName , '.scripts' ].
 	(DiskStore current isDirectory: importFileName asPath)
 		ifFalse: [ ^ UIManager default inform: 'Folder ' , importFileName , ' does not exist!' ].
 	Cursor wait showWhile: [ importedScripts := self importScriptsUsingFolderHierarchyFrom: importFileName asFileReference ].
