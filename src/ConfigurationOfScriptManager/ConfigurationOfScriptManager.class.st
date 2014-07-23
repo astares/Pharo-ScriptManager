@@ -129,7 +129,7 @@ ConfigurationOfScriptManager >> project [
 
 { #category : #'symbolic versions' }
 ConfigurationOfScriptManager >> stable: spec [ 
-	<symbolicVersion: #stable>
+	<symbolicVersion: #'stable'>
 	
 	spec for: #'pharo1.1.x' version: '1.2'. 
 	spec for: #'pharo1.2.x' version: '1.2'. 
@@ -137,6 +137,7 @@ ConfigurationOfScriptManager >> stable: spec [
 	spec for: #'pharo1.4.x' version: '1.4'.
 	spec for: #'pharo2.0.x' version: '1.6'.
 	spec for: #'pharo3.0.x' version: '1.7'.
+	spec for: #'common' version: '1.7'.
 	
 ]
 
