@@ -234,7 +234,7 @@ ConfigurationOfScriptManager >> version18: spec [
 	spec for: #common do: [
 		spec blessing: #development.
 		spec 
-			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.26';
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.27';
 			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
 
@@ -245,6 +245,6 @@ ConfigurationOfScriptManager >> version19: spec [
 	spec for: #common do: [
 		spec blessing: #development.
 		spec 
-			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.26';
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.27';
 			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
