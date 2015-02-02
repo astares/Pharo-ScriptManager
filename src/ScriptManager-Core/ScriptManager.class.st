@@ -357,8 +357,8 @@ ScriptManager >> exportScriptsUsingFuel [
 ScriptManager >> exportSubMenuIn: aMenu [
 
 	^(UIManager default newMenuIn: aMenu for: self)
-		add: 'Text scripts in folders' action: #exportScriptsUsingFolderHierarchy;				 
-		add: 'Binary fuel file' action: #exportScriptsUsingFuel;
+		add: 'Text scripts in folders' selector: #exportScriptsUsingFolderHierarchy;				 
+		add: 'Binary fuel file' selector: #exportScriptsUsingFuel;
 		yourself
 ]
 
@@ -416,7 +416,7 @@ ScriptManager >> folderListIndex: anInteger [
 { #category : #menus }
 ScriptManager >> folderListMenu: aMenu [
 	^aMenu
-		add: 'New folder ...' action: #newFolder;
+		add: 'New folder ...' selector: #newFolder;
 		addToggle: self renameString target: self selector: #renameFolder getStateSelector: nil enablementSelector: #isFolderSelected;
 		addToggle: self deleteString target: self selector: #deleteFolder getStateSelector: nil enablementSelector: #isFolderSelected;		 		
 		addLine;
@@ -508,8 +508,8 @@ ScriptManager >> importScriptsUsingFuel [
 ScriptManager >> importSubMenuIn: aMenu [
 
 	^(UIManager default newMenuIn: aMenu for: self)
-		add: 'Text scripts in folders' action: #importScriptsUsingFolderHierarchy;
-		add: 'Binary fuel file' action: #importScriptsUsingFuel;
+		add: 'Text scripts in folders' selector: #importScriptsUsingFolderHierarchy;
+		add: 'Binary fuel file' selector: #importScriptsUsingFuel;
 		yourself
 ]
 
@@ -733,10 +733,10 @@ ScriptManager >> scriptListMenu: aMenu [
 		addToggle: self changeFolderString target: self selector: #changeFolder getStateSelector: nil enablementSelector: #isScriptSelected;
 		addLine;
 		addToggle: self tearOffString target: self selector: #tearOffScript getStateSelector: nil enablementSelector: #isScriptSelected;
-		add: 'New from Workspace' action: #bringInScripts;
+		add: 'New from Workspace' selector: #bringInScripts;
 		addLine;
 		addToggle: self saveScriptToFileString target: self selector: #saveScriptToFile getStateSelector: nil enablementSelector: #isScriptSelected;
-		add: 'Load from file...' action: #loadScriptFromFile;
+		add: 'Load from file...' selector: #loadScriptFromFile;
 	yourself
 
 ]
