@@ -137,7 +137,7 @@ ConfigurationOfScriptManager >> stable: spec [
 	spec for: #'pharo1.4.x' version: '1.4'.
 	spec for: #'pharo2.0.x' version: '1.6'.
 	spec for: #'pharo3.0.x' version: '1.7'.
-	spec for: #'common' version: '1.7'.
+	spec for: #'common' version: '1.8'.
 	
 ]
 
@@ -234,6 +234,17 @@ ConfigurationOfScriptManager >> version18: spec [
 	spec for: #common do: [
 		spec blessing: #development.
 		spec 
-			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.25';
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.26';
+			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
+]
+
+{ #category : #versions }
+ConfigurationOfScriptManager >> version19: spec [ 
+	<version: '1.9' imports: #('1.1-baseline') >
+	
+	spec for: #common do: [
+		spec blessing: #development.
+		spec 
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.26';
 			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
