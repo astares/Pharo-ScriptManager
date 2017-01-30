@@ -39,7 +39,7 @@ ScriptManager class >> menuCommandOn: aBuilder [
 	<worldMenu> 
 	(aBuilder item: #'Script Manager')
 		parent: #Tools;
-		icon: Smalltalk ui icons smallLeftFlushIcon;
+		icon: self taskbarIcon;
 		action:[self open]
 ]
 
@@ -122,7 +122,7 @@ ScriptManager >> acceptDroppingMorph: transferMorph event: evt inMorph: dstListM
 				to: newFolder]]
 ]
 
-{ #category : #widgets }
+{ #category : #adding }
 ScriptManager >> addMorphsTo: aWindow [
 	"Add morphs to <aWindow>."
 	 
@@ -137,7 +137,11 @@ ScriptManager >> addMorphsTo: aWindow [
 
 	aWindow
 		addMorph: self buildTextMorph
-		frame: ( 0@0.4 extent: 1@0.6)
+		frame: ( 0@0.4 extent: 1@0.6).
+		
+	self
+		changed: #folderList;
+		changed: #scriptList
 ]
 
 { #category : #callbacks }
@@ -389,6 +393,12 @@ ScriptManager >> firstLineFor: aString [
 		ifNone: [ nil ]
 ]
 
+{ #category : #private }
+ScriptManager >> folderIcon: x [
+
+	^Smalltalk ui icons iconNamed: #smallOpenIcon
+]
+
 { #category : #'folder list' }
 ScriptManager >> folderList [
 	^self scripts keys asSortedCollection
@@ -427,13 +437,14 @@ ScriptManager >> folderListMenu: aMenu [
 
 { #category : #widgets }
 ScriptManager >> folderListWidget [
-	^PluggableListMorph 
+	^(PluggableIconListMorph
 		on: self
 		list: #folderList
 		selected: #folderListIndex
-		changeSelected: #folderListIndex:
+		changeSelected: #folderListIndex:		
 		menu: #folderListMenu:
-		keystroke: nil
+		keystroke: nil)
+		getIconSelector: #folderIcon:
 ]
 
 { #category : #callbacks }
@@ -695,6 +706,12 @@ ScriptManager >> saveScriptToFileString [
 	^'Save in file...'
 ]
 
+{ #category : #private }
+ScriptManager >> scriptIcon: x [
+
+	^self class taskbarIcon
+]
+
 { #category : #'script list' }
 ScriptManager >> scriptList [
 	"Returns the list of scripts in the folder"
@@ -743,13 +760,14 @@ ScriptManager >> scriptListMenu: aMenu [
 
 { #category : #widgets }
 ScriptManager >> scriptListWidget [
-	^PluggableListMorph 
+	^(PluggableIconListMorph 
 		on: self
 		list: #scriptList
 		selected: #scriptListIndex
 		changeSelected: #scriptListIndex:
 		menu: #scriptListMenu:
-		keystroke: nil
+		keystroke: nil)
+		getIconSelector: #scriptIcon:
 ]
 
 { #category : #'folder list' }
