@@ -30,6 +30,36 @@ ConfigurationOfScriptManager class >> bootstrapPackage: aString from: aPath [
 			version workingCopy repositoryGroup addRepository: repository]
 ]
 
+{ #category : #catalog }
+ConfigurationOfScriptManager class >> catalogChangeLog [
+	"Returns a paragraph describing the most important changes in the configuration class."
+	^ ''
+]
+
+{ #category : #catalog }
+ConfigurationOfScriptManager class >> catalogContactInfo [
+	"Returns a paragraph describing contact information such as email, mailing lists and website."
+	^ 'You can contact the author on the pharo mailinglist.'
+]
+
+{ #category : #catalog }
+ConfigurationOfScriptManager class >> catalogDescription [
+	"Returns a paragraph describing the project"
+	^ 'A simple tool to manage scripts. Still based on Morphic. We would recommend users to switch to QuickAccess which is a better script manager than this tool.'
+]
+
+{ #category : #catalog }
+ConfigurationOfScriptManager class >> catalogKeyClassesAndExample [
+	"Returns a paragraph or more describing the key classes of your project. You can use Pillar/Pier syntax to layout out the text i.e., ==Code== and - for bullet."
+	^ ' '
+]
+
+{ #category : #catalog }
+ConfigurationOfScriptManager class >> catalogKeywords [
+	"Returns an array of symbols"
+	^ #(script fun) 
+]
+
 { #category : #private }
 ConfigurationOfScriptManager class >> ensureMetacello [
 	"Bootstrap Gofer (if necessary), bootstrap ConfigurationOfMetacello (using old Gofer API), then load the latest 
@@ -137,7 +167,9 @@ ConfigurationOfScriptManager >> stable: spec [
 	spec for: #'pharo1.4.x' version: '1.4'.
 	spec for: #'pharo2.0.x' version: '1.6'.
 	spec for: #'pharo3.0.x' version: '1.7'.
-	spec for: #'common' version: '1.8'.
+	spec for: #'pharo4.0.x' version: '1.8'.
+	spec for: #'pharo5.0.x' version: '1.9'.
+	spec for: #'common' version: '1.10'.
 	
 ]
 
@@ -149,6 +181,17 @@ ConfigurationOfScriptManager >> version10: spec [
 		spec blessing: #release.
 		spec 
 			package: 'ScriptManager-Core' with: 'ScriptManager-Core-tbn.9'].
+]
+
+{ #category : #versions }
+ConfigurationOfScriptManager >> version110: spec [ 
+	<version: '1.10' imports: #('1.1-baseline') >
+	
+	spec for: #common do: [
+		spec blessing: #development.
+		spec 
+			package: 'ScriptManager-Core' with: 'ScriptManager-Core-TorstenBergmann.28';
+			package: 'ScriptManager-Help' with: 'ScriptManager-Help-tbn.1']
 ]
 
 { #category : #versions }
