@@ -240,9 +240,9 @@ ScriptManager >> codePaneMenu: aMenu shifted: shifted [
 	| donorMenu |
 	donorMenu := shifted
 		ifTrue:
-			[SmalltalkEditor shiftedYellowButtonMenu]
+			[TextEditor new shiftedYellowButtonMenu]
 		ifFalse:
-			[SmalltalkEditor yellowButtonMenu].
+			[TextEditor new yellowButtonMenu].
 	^ aMenu addAllFrom: donorMenu
 ]
 
