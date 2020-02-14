@@ -574,9 +574,7 @@ ScriptManager >> localWorkspaces [
 	world := self dependents first world.
 	systemWindows := world submorphs
 				select: [:each | each model isKindOf: Workspace].
-	^ systemWindows
-		collect: [:each | each model dependents
-				detect: [:e | e isKindOf: PluggableTextMorph]]
+	^ RubScrolledTextMorph allInstances 
 ]
 
 { #category : #callbacks }
@@ -841,10 +839,7 @@ ScriptManager >> storageFileName [
 
 { #category : #callbacks }
 ScriptManager >> tearOffScript [
-	| wsClass ws |
-	wsClass := (Smalltalk at: #SHWorkspace ifAbsent: [Workspace]).
-	ws := wsClass new contents: self contents.
-	ws openLabel: 'Workspace' 
+	Workspace openContents: self contents
 ]
 
 { #category : #'menus - strings' }
